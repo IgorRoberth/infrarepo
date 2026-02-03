@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contemporary - Login</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#ffffff',
+                        foreground: '#030213',
+                        primary: '#030213',
+                        'primary-foreground': '#ffffff',
+                        secondary: '#f3f3f5',
+                        'secondary-foreground': '#030213',
+                        muted: '#ececf0',
+                        'muted-foreground': '#717182',
+                        border: 'rgba(0, 0, 0, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-foreground min-h-screen">
+    <!-- Header (idêntico ao home) -->
+    <header class="border-b border-border sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <button id="mobileMenuBtn" class="md:hidden">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <h1 class="text-xl font-light tracking-wide cursor-pointer" onclick="window.location.href='/home'">CONTEMPORARY</h1>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="/home" class="text-sm font-medium hover:text-primary/80 transition-colors">Início</a>
+                    <a href="/produtos" class="text-sm font-medium hover:text-primary/80 transition-colors">Cadastrar</a>
+                    <a href="/login" class="text-sm font-medium text-primary border-b-2 border-primary">Login</a>
+                </nav>
+
+                <!-- Actions -->
+                <div class="flex items-center space-x-4">
+                    <button class="hidden md:flex items-center justify-center w-10 h-10 rounded-full hover:bg-secondary transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
+                    <button class="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="md:hidden hidden border-t border-border mt-4 pt-4">
+                <nav class="space-y-3">
+                    <a href="/home" class="block text-sm font-medium hover:text-primary/80">Início</a>
+                    <a href="/produtos" class="block text-sm font-medium hover:text-primary/80">Cadastrar</a>
+                    <a href="/login" class="block text-sm font-medium text-primary">Login</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Login Section -->
+        <section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-primary via-primary/90 to-primary/80">
+            <div class="absolute inset-0 bg-black/20"></div>
+             <div class="relative z-10 w-full max-w-md mx-auto px-4">
+                <div class="bg-white rounded-lg shadow-xl border border-border overflow-hidden transform transition-all duration-300 hover:scale-105">
+                    <!-- Header -->
+                    <div class="text-center py-8 px-6">
+                        <h2 class="text-3xl font-light mb-4 tracking-wide text-primary">Bem-vindo de volta</h2>
+                        <p class="text-muted-foreground">Entre com suas credenciais para continuar</p>
+                    </div>
+                    <div class="px-6 pb-8">
+                        <div class="mb-6">
+                            <div class="flex bg-secondary rounded-lg p-1">
+                                <button id="customerBtn" class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 bg-white text-primary shadow-sm">
+                                    Cliente
+                                </button>
+                                <button id="sellerBtn" class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 text-muted-foreground hover:text-primary">
+                                    Vendedor
+                                </button>
+                            </div>
+                        </div>                        
+                        <form id="loginForm" class="space-y-6">
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-foreground mb-2">Email</label>
+                                <input type="email" id="email" name="email" required 
+                                       class="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                                       placeholder="seu@email.com">
+                            </div>
+                             <div>
+                                <label for="password" class="block text-sm font-medium text-foreground mb-2">Senha</label>
+                                <div class="relative">
+                                    <input type="password" id="password" name="password" required 
+                                           class="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors pr-10"
+                                           placeholder="Sua senha">
+                                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                        <svg class="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="remember" name="remember" class="h-4 w-4 text-primary focus:ring-primary border-border rounded">
+                                    <label for="remember" class="ml-2 block text-sm text-muted-foreground">Lembrar de mim</label>
+                                </div>
+                                <div class="text-center mt-4">
+                                    <a href="/resetpassword/forgot-password" class="text-sm text-blue-600 hover:text-blue-500">
+                                        Esqueci minha senha
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Submit Button -->
+                            <button type="submit" id="submitBtn" class="w-full bg-primary text-primary-foreground px-8 py-3 rounded-md hover:bg-primary/90 transition-all duration-200 font-medium transform hover:scale-105">
+                                <span id="submitText">Entrar como Cliente</span>
+                                <span id="loadingText" class="hidden">Entrando...</span>
+                            </button>
+                        </form>
+
+                        <!-- Divider -->
+                        <div class="mt-6">
+                            <div class="relative">
+                                <div class="absolute inset-0 flex items-center">
+                                    <div class="w-full border-t border-border"></div>
+                                </div>
+                                <div class="relative flex justify-center text-sm">
+                                    <span class="px-2 bg-white text-muted-foreground">Não tem uma conta?</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Register Link -->
+                        <div class="mt-6 text-center">
+                            <a href="/cadastros/register-seller" id="registerLink" class="text-primary hover:text-primary/80 transition-colors font-medium">Criar conta como Cliente</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <div id="messageContainer" class="hidden mt-4">
+                    <div id="messageContent" class="p-4 rounded-md text-sm font-medium"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-primary-foreground py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h5 class="font-medium mb-4">CONTEMPORARY</h5>
+                    <p class="text-sm text-primary-foreground/80 leading-relaxed">
+                        Moda contemporânea para pessoas que valorizam estilo e qualidade.
+                    </p>
+                </div>
+
+                <div>
+                    <h6 class="font-medium mb-4">Produtos</h6>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-primary-foreground/80 hover:text-primary-foreground transition-colors">Roupas</a></li>
+                        <li><a href="#" class="text-primary-foreground/80 hover:text-primary-foreground transition-colors">Acessórios</a></li>
+                        <li><a href="#" class="text-primary-foreground/80 hover:text-primary-foreground transition-colors">Calçados</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h6 class="font-medium mb-4">Atendimento</h6>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-primary-foreground/80 hover:text-primary-foreground transition-colors">Contato</a></li>
+                        <li><a href="#" class="text-primary-foreground/80 hover:text-primary-foreground transition-colors">Trocas</a></li>
+                        <li><a href="#" class="text-primary-foreground/80 hover:text-primary-foreground transition-colors">Entrega</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h6 class="font-medium mb-4">Redes Sociais</h6>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-primary-foreground/80 hover:text-primary-foreground transition-colors">Instagram</a></li>
+                        <li><a href="#" class="text-primary-foreground/80 hover:text-primary-foreground transition-colors">Facebook</a></li>
+                        <li><a href="#" class="text-primary-foreground/80 hover:text-primary-foreground transition-colors">Twitter</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="border-primary-foreground/20 my-8">
+
+            <div class="flex flex-col md:flex-row justify-between items-center text-sm text-primary-foreground/80">
+                <p>&copy; 2024 Contemporary. Todos os direitos reservados.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-primary-foreground transition-colors">Privacidade</a>
+                    <a href="#" class="hover:text-primary-foreground transition-colors">Termos</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="/login/login.js"></script>
+</body>
+</html>

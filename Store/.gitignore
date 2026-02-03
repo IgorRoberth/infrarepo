@@ -1,0 +1,98 @@
+##################################
+# Maven / Java
+##################################
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+##################################
+# STS / Eclipse
+##################################
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+##################################
+# Logs
+##################################
+logs/
+*.log
+
+##################################
+# IntelliJ IDEA
+##################################
+.idea/
+*.iws
+*.iml
+*.ipr
+
+##################################
+# NetBeans
+##################################
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+##################################
+# VS Code
+##################################
+.vscode/
+
+##################################
+# Spring Boot - Sensíveis
+##################################
+application.properties
+application-docker.properties
+application-*.properties
+
+##################################
+# Docker
+##################################
+docker-compose.yml
+docker-compose.*.yml
+.env
+.env.*
+
+##################################
+# Uploads de usuário
+##################################
+src/main/resources/static/uploads/
+uploads/
+data/
+
+##################################
+# Arquivos sensíveis
+##################################
+config/
+secrets/
+credentials/
+*.sql
+
+##################################
+# Certificados / Chaves
+##################################
+*.key
+*.crt
+*.pem
+*.p12
+*.jks
+
+##################################
+# Robot Framework / QA
+##################################
+results/
+results_visual/
+report.html
+log.html
+output.xml

@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+      routes:
+        - id: store-backend
+          uri: http://store-backend:8081
+          predicates:
+            - Path=/api/**
+
+      globalcors:
+        corsConfigurations:
+          "[/**]":
+            allowedOriginPatterns:
+              - "http://localhost:8085"
+              - "http://127.0.0.1:8085"
+              - "https://*.trycloudflare.com"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  health:
+    redis:
+      enabled: false
+    

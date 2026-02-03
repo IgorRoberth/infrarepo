@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Contemporary - Dashboard Vendedor</title>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            background: '#ffffff',
+                            foreground: '#030213',
+                            primary: '#030213',
+                            'primary-foreground': '#ffffff',
+                            secondary: '#f3f3f5',
+                            'secondary-foreground': '#030213',
+                            muted: '#ececf0',
+                            'muted-foreground': '#717182',
+                            border: 'rgba(0, 0, 0, 0.1)',
+                        }
+                    }
+                }
+            }
+        </script>
+    </head>
+    <body class="bg-background text-foreground min-h-screen">
+        <div id="loadingScreen" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+            <div class="text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                <p class="text-muted-foreground">Verificando autenticação...</p>
+            </div>
+        </div>
+
+        <div id="unauthorizedScreen" class="fixed inset-0 bg-white z-40 flex items-center justify-center hidden">
+            <div class="text-center max-w-md mx-auto px-4">
+                <div class="text-red-500 mb-4">
+                    <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-light text-foreground mb-4">Acesso Restrito</h2>
+                <p class="text-muted-foreground mb-6">
+                    Esta página é exclusiva para vendedores autenticados.
+                </p>
+                <div class="space-y-3">
+                    <a href="/login" id="link-login-unauthorized" class="block w-full bg-primary text-primary-foreground px-6 py-3 rounded-md hover:bg-primary/90 transition-colors font-medium">
+                        Fazer Login como Vendedor
+                    </a>
+                    <a href="/cadastros/register-seller" id="link-register-unauthorized" class="block w-full border border-border text-foreground px-6 py-3 rounded-md hover:bg-secondary transition-colors">
+                        Cadastrar como Vendedor
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="mainContent" class="hidden">
+            <header class="border-b border-border sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-30">
+                <div class="container mx-auto px-4 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <button id="mobileMenuBtn" class="md:hidden">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                                </svg>
+                            </button>
+                            <h1 class="text-xl font-light tracking-wide">CONTEMPORARY</h1>
+                            <span class="text-xs bg-primary text-primary-foreground px-2 py-1 rounded">VENDEDOR</span>
+                        </div>
+
+                        <nav class="hidden md:flex items-center space-x-8">
+                            <a href="/home" id="nav-dashboard" class="text-sm font-medium text-primary border-b-2 border-primary">Dashboard</a>
+                            <a href="/produtos/upload" id="nav-upload-products" class="text-sm font-medium hover:text-primary/80 transition-colors">Cadastrar Produto</a>
+                            <a href="/produtos/list" id="nav-list-products" class="text-sm font-medium hover:text-primary/80 transition-colors">Meus Produtos</a>
+                            <div class="flex items-center space-x-4">
+                                <span id="sellerName" class="text-sm text-muted-foreground"></span>
+                                <button id="logoutBtn" class="text-sm font-medium text-red-600 hover:text-red-700 transition-colors">
+                                    Sair
+                                </button>
+                            </div>
+                        </nav>
+
+                        <div class="md:hidden">
+                            <button id="mobileLogoutBtn" class="text-sm font-medium text-red-600 hover:text-red-700 transition-colors">
+                                Sair
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mobileMenu" class="hidden md:hidden border-t border-border">
+                    <div class="container mx-auto px-4 py-4 space-y-2">
+                        <a href="/home" id="mobile-nav-dashboard" class="block text-sm font-medium text-primary py-2">Dashboard</a>
+                        <a href="/produtos/upload" id="mobile-nav-upload-products" class="block text-sm font-medium hover:text-primary/80 transition-colors py-2">Cadastrar Produto</a>
+                        <a href="/produtos/list" id="mobile-nav-list-products" class="block text-sm font-medium hover:text-primary/80 transition-colors py-2">Meus Produtos</a>
+                    </div>
+                </div>
+            </header>
+
+            <main class="container mx-auto px-4 py-8">
+                <section class="mb-8">
+                    <div class="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-lg p-6">
+                        <h2 class="text-2xl font-light mb-2">Bem-vindo(a), <span id="welcomeName">Vendedor</span>!</h2>
+                        <p class="opacity-90">Gerencie seus produtos e acompanhe suas vendas.</p>
+                    </div>
+                </section>
+
+                <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow-sm border border-border p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-muted-foreground">Total de Produtos</p>
+                                <p id="totalProducts" class="text-2xl font-semibold text-foreground">0</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-sm border border-border p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-muted-foreground">Produtos Ativos</p>
+                                <p id="activeProducts" class="text-2xl font-semibold text-foreground">0</p>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-sm border border-border p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-muted-foreground">Vendas do Mês</p>
+                                <p id="monthlySales" class="text-2xl font-semibold text-foreground">R$ 0,00</p>
+                            </div>
+                            <div class="bg-yellow-100 p-3 rounded-full">
+                                <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="mb-8">
+                    <h3 class="text-xl font-light mb-4">Ações Rápidas</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <a href="/produtos/upload" id="quick-action-upload" class="bg-white rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-blue-950 p-3 rounded-full">
+                                    <svg class="w-6 h-6 darck:text-white-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-foreground">Cadastrar Produto</h4>
+                                    <p class="text-sm text-muted-foreground">Adicione um novo produto</p>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a href="/produtos/list" id="quick-action-list" class="bg-white rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-green-100 p-3 rounded-full">
+                                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-foreground">Gerenciar Produtos</h4>
+                                    <p class="text-sm text-muted-foreground">Edite seus produtos</p>                                    
+                               </div>
+                            </div>
+                        </a>
+
+                        <button id="quick-action-refresh" onclick="refreshDashboard()" class="bg-white rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow text-left">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-purple-100 p-3 rounded-full">
+                                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-foreground">Atualizar Dashboard</h4>
+                                    <p class="text-sm text-muted-foreground">Recarregar dados</p>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-light">Seus Produtos</h3>
+                    </div>
+                    
+                    <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    </div>
+                </section>
+            </main> 
+            <div id="editModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden backdrop-blur-sm">
+                </div>
+        </div>
+        <script src="/home/script.js"></script>
+        <script src="/home/auth.js"></script>
+    </body>
+    </html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contemporary - Editar Produto</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#ffffff',
+                        foreground: '#030213',
+                        primary: '#030213',
+                        'primary-foreground': '#ffffff',
+                        secondary: '#f3f3f5',
+                        'secondary-foreground': '#030213',
+                        muted: '#ececf0',
+                        'muted-foreground': '#717182',
+                        border: 'rgba(0, 0, 0, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/produtos/upload.css">
+</head>
+<body class="bg-background text-foreground">
+    <!-- Header -->
+    <header class="border-b border-border sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <h1 class="text-xl font-light tracking-wide">CONTEMPORARY</h1>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="/home/index" class="text-sm font-medium hover:text-primary/80 transition-colors">Início</a>
+                    <a href="/produtos/upload" class="text-sm font-medium hover:text-primary/80 transition-colors">Cadastrar Produto</a>
+                    <a href="/produtos/list" class="text-sm font-medium hover:text-primary/80 transition-colors">Meus Produtos</a>
+                </nav>
+
+                <!-- Actions -->
+                <div class="flex items-center space-x-4">
+                    <button id="logoutBtn" class="bg-white text-gray-800 px-4 py-2 rounded-md hover:bg-transparent focus:bg-transparent hover:text-blue-800 focus:text-blue-800 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Page Title -->
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-light mb-4">Editar Produto</h2>
+                <p class="text-muted-foreground">Atualize as informações do seu produto</p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-white rounded-lg shadow-sm border border-border p-8">
+                <form id="editProductForm" class="space-y-6" onsubmit="return false;">
+                    <input type="hidden" id="productId">
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="space-y-6">
+                            <div class="form-group">
+                                <label for="nome" class="block text-sm font-medium text-foreground mb-2">Nome do Produto *</label>
+                                <input type="text" id="nome" name="nome" required
+                                       class="form-input w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                                       placeholder="Ex: Smartphone Galaxy S24">
+                            </div>
+
+                            <!-- Descrição -->
+                            <div class="form-group">
+                                <label for="descricao" class="block text-sm font-medium text-foreground mb-2">Descrição *</label>
+                                <textarea id="descricao" name="descricao" rows="4" required
+                                          class="form-input w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors resize-none"
+                                          placeholder="Descreva as características e benefícios do produto..."></textarea>
+                            </div>
+
+                            <!-- Preço e Estoque -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="form-group">
+                                    <label for="preco" class="block text-sm font-medium text-foreground mb-2">Preço (R$) *</label>
+                                    <input type="number" id="preco" name="preco" step="0.01" min="0" required
+                                           class="form-input w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                                           placeholder="0,00">
+                                </div>
+                                <div class="form-group">
+                                    <label for="estoque" class="block text-sm font-medium text-foreground mb-2">Estoque *</label>
+                                    <input type="number" id="estoque" name="estoque" min="0" required
+                                           class="form-input w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                                           placeholder="0">
+                                </div>
+                            </div>
+
+                            <!-- Categoria e Marca -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="form-group">
+                                    <label for="categoria" class="block text-sm font-medium text-foreground mb-2">Categoria *</label>
+                                    <select id="categoria" name="categoria" required
+                                            class="form-input w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors">
+                                        <option value="">Selecione uma categoria</option>
+                                        <option value="ELETRONICOS">Eletrônicos</option>
+                                        <option value="ROUPAS">Roupas & Acessórios</option>
+                                        <option value="CASA_JARDIM">Casa & Jardim</option>
+                                        <option value="ESPORTES">Esportes & Lazer</option>
+                                        <option value="LIVROS">Livros & Mídia</option>
+                                        <option value="ALIMENTOS">Alimentos & Bebidas</option>
+                                        <option value="BELEZA">Beleza & Cuidados Pessoais</option>
+                                        <option value="BRINQUEDOS">Brinquedos e Jogos</option>
+                                        <option value="AUTOMOTIVO">Automotivo</option>
+                                        <option value="FERRAMENTAS">Ferramentas e Construção</option>
+                                        <option value="SAUDE">Saúde e Bem-estar</option>
+                                        <option value="OUTROS">Outros</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="marca" class="block text-sm font-medium text-foreground mb-2">Marca</label>
+                                    <input type="text" id="marca" name="marca"
+                                           class="form-input w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                                           placeholder="Ex: Nike, Apple, Samsung">
+                                </div>
+                            </div>
+
+                            <!-- SKU -->
+                            <div class="form-group">
+                                <label for="sku" class="block text-sm font-medium text-foreground mb-2">SKU (Código do Produto)</label>
+                                <input type="text" id="sku" name="sku"
+                                       class="form-input w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                                       placeholder="Ex: CAM-BAS-001">
+                            </div>
+                        </div>
+
+                        <!-- Coluna Direita: Upload de Imagem -->
+                        <div class="space-y-6">
+                            <!-- Upload de Imagem -->
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-foreground mb-2">Imagem do Produto</label>
+                                <div id="uploadArea" class="image-upload-area border-2 border-dashed border-border rounded-lg p-8 text-center transition-colors hover:border-primary/50 cursor-pointer">
+                                    <input type="file" id="productImage" accept="image/*" class="hidden">
+                                    
+                                    <div id="uploadPlaceholder" class="upload-placeholder hidden">
+                                        <svg class="w-12 h-12 mx-auto mb-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                        </svg>
+                                        <p class="text-muted-foreground mb-2">Clique para alterar a imagem</p>
+                                        <p class="text-xs text-muted-foreground">PNG, JPG ou JPEG até 5MB</p>
+                                    </div>
+                                    
+                                    <div id="imagePreview" class="image-preview">
+                                        <img id="previewImg" src="" alt="Preview" class="max-w-full max-h-64 mx-auto rounded-lg mb-4">
+                                        <button type="button" id="removeBtn" class="text-red-500 hover:text-red-700 text-sm font-medium">
+                                            Remover/Alterar Imagem
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Informações Adicionais -->
+                            <div class="bg-secondary/30 rounded-lg p-6">
+                                <h3 class="text-lg font-medium text-foreground mb-4">Informações Adicionais</h3>
+                                
+                                <!-- Produto Ativo -->
+                                <div class="form-group">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="ativo" name="ativo" class="rounded border-border text-primary focus:ring-primary">
+                                        <span class="text-sm font-medium text-foreground">Produto ativo (visível na loja)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end space-x-4 pt-6 border-t border-border">
+                        <button type="button" id="cancelBtn" onclick="window.history.back()" class="px-6 py-3 border border-border rounded-md text-foreground hover:bg-secondary transition-colors font-medium">
+                            Cancelar
+                        </button>
+                        <button type="submit" id="submitBtn" class="px-8 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors font-medium">
+                            <span id="submitText">Salvar Alterações</span>
+                            <span id="loadingText" class="hidden">Salvando...</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Messages -->
+            <div id="messageContainer" class="hidden fixed top-4 right-4 z-50">
+                <div id="messageContent" class="p-4 rounded-md text-sm font-medium"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-primary-foreground py-8 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <p class="text-sm text-primary-foreground/80">&copy; 2024 Contemporary. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="/produtos/editar-produto.js"></script>
+</body>
+</html>

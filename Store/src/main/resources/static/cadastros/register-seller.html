@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contemporary - Cadastro de Vendedor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#ffffff',
+                        foreground: '#030213',
+                        primary: '#030213',
+                        'primary-foreground': '#ffffff',
+                        secondary: '#f3f3f5',
+                        'secondary-foreground': '#030213',
+                        muted: '#ececf0',
+                        'muted-foreground': '#717182',
+                        border: 'rgba(0, 0, 0, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-foreground min-h-screen">
+    <header class="border-b border-border sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <button id="mobileMenuBtn" class="md:hidden">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <h1 class="text-xl font-light tracking-wide cursor-pointer" onclick="window.location.href='/home'">CONTEMPORARY</h1>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="/home" class="text-sm font-medium hover:text-primary/80 transition-colors">Início</a>
+                    <a href="/produtos" class="text-sm font-medium hover:text-primary/80 transition-colors">Cadastrar</a>
+                    <a href="/login" class="text-sm font-medium hover:text-primary/80 transition-colors">Login</a>
+                    <a href="/registerseller/register-seller" class="text-sm font-medium text-primary border-b-2 border-primary">Seja Vendedor</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-2xl space-y-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-light tracking-tight text-foreground">Cadastro de Vendedor</h2>
+                <p class="mt-2 text-sm text-muted-foreground">Junte-se à Contemporary e comece a vender seus produtos</p>
+            </div>
+
+            <form id="registerForm" class="mt-8 space-y-6" novalidate>
+                <div class="bg-secondary/30 p-6 rounded-lg space-y-4">
+                    <h3 class="text-lg font-medium text-foreground mb-4">Dados Pessoais</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="nome" class="block text-sm font-medium text-foreground mb-2">Nome Completo *</label>
+                            <input id="nome" name="nome" type="text" required class="w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Seu nome completo">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-foreground mb-2">Email *</label>
+                            <input id="email" name="email" type="email" required class="w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="seu@email.com">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-foreground mb-2">Senha *</label>
+                            <input id="password" name="password" type="password" required class="w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Mínimo 6 caracteres">
+                        </div>
+                        <div>
+                            <label for="telefone" class="block text-sm font-medium text-foreground mb-2">Telefone</label>
+                            <input id="telefone" name="telefone" type="tel" class="w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="(11) 99999-9999">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-secondary/30 p-6 rounded-lg space-y-4">
+                    <h3 class="text-lg font-medium text-foreground mb-4">Dados da Empresa</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="cnpj" class="block text-sm font-medium text-foreground mb-2">CNPJ *</label>
+                            <input id="cnpj" name="cnpj" type="text" required maxlength="18" class="w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="00.000.000/0000-00">
+                        </div>
+                        <div>
+                            <label for="razaoSocial" class="block text-sm font-medium text-foreground mb-2">Razão Social</label>
+                            <input id="razaoSocial" name="razaoSocial" type="text" class="w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Nome da empresa">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-secondary/30 p-6 rounded-lg space-y-4">
+                    <h3 class="text-lg font-medium text-foreground mb-4">Endereço</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="cep" class="block text-sm font-medium text-foreground mb-2">CEP</label>
+                            <input id="cep" name="cep" type="text" maxlength="9" class="w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="00000-000">
+                        </div>
+                        <div>
+                            <label for="cidade" class="block text-sm font-medium text-foreground mb-2">Cidade</label>
+                            <input id="cidade" name="cidade" type="text" readonly class="w-full px-3 py-2 border border-border rounded-md shadow-sm bg-muted cursor-not-allowed" placeholder="Cidade">
+                        </div>
+                        <div>
+                            <label for="estado" class="block text-sm font-medium text-foreground mb-2">Estado</label>
+                            <input id="estado" name="estado" type="text" readonly class="w-full px-3 py-2 border border-border rounded-md shadow-sm bg-muted cursor-not-allowed" placeholder="UF">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="endereco" class="block text-sm font-medium text-foreground mb-2">Endereço Completo</label>
+                        <input id="endereco" name="endereco" type="text" class="w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Rua, número, complemento">
+                    </div>
+                </div>
+
+                <div id="message" class="hidden p-4 rounded-md"></div>
+
+                <button type="submit" id="submitBtn" class="w-full flex justify-center py-3 px-4 rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 transition-colors">
+                    Cadastrar como Vendedor
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+  const messageDiv = document.getElementById('message');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function showMessage(message, type = 'info') {
+    messageDiv.classList.remove('hidden');
+    messageDiv.className = `p-4 rounded-md mb-4 ${
+      type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' :
+      type === 'error'   ? 'bg-red-50 text-red-800 border border-red-200' :
+                           'bg-blue-50 text-blue-800 border border-blue-200'
+    }`;
+    messageDiv.textContent = message;
+    messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  async function readBodyAsJsonOrText(response) {
+    const raw = await response.text(); 
+    if (!raw) return null;
+
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return { message: raw };
+    }
+  }
+
+  document.getElementById('registerForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    const sellerData = Object.fromEntries(formData.entries());
+
+    const cnpjLimpo = (sellerData.cnpj || '').replace(/\D/g, '');
+    if (cnpjLimpo.length !== 14) {
+      showMessage('CNPJ deve conter exatamente 14 dígitos', 'error');
+      return;
+    }
+
+    const senha = (sellerData.password || '').trim();
+    if (senha.length < 6) {
+      showMessage('Senha deve conter no mínimo 6 caracteres', 'error');
+      return;
+    }
+
+    const razaoSocial = (sellerData.razaoSocial || '').trim();
+    if (razaoSocial.length > 150) {
+      showMessage('Razão Social deve conter no máximo 150 caracteres', 'error');
+      return;
+    }
+
+    const estado = (sellerData.estado || '').trim();
+    if (estado.length > 2) {
+      showMessage('Estado deve conter no máximo 2 caracteres', 'error');
+      return;
+    }
+
+    const payload = {
+    nome: (sellerData.nome || '').trim(),
+    email: (sellerData.email || '').trim(),
+    password: (sellerData.password || '').trim(),
+    telefone: (sellerData.telefone || '').trim() || null,
+    endereco: (sellerData.endereco || '').trim() || null,
+    cnpj: cnpjLimpo,
+    razaoSocial: (sellerData.razaoSocial || '').trim() || null,
+    cep: (sellerData.cep || '').replace(/\D/g, '') || null,
+    cidade: (sellerData.cidade || '').trim() || null,
+    estado: (sellerData.estado || '').trim() || null
+};
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Cadastrando...';
+
+    try {
+      const response = await fetch('/api/registerseller', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await readBodyAsJsonOrText(response);
+
+      if (!response.ok) {
+        const msg =
+          data?.message ||
+          data?.erro ||
+          data?.error ||
+          `Falha no cadastro (HTTP ${response.status})`;
+        throw new Error(msg);
+      }
+
+      showMessage('Cadastro realizado com sucesso! Redirecionando...', 'success');
+
+      setTimeout(() => window.location.href = '/login', 2500);
+
+    } catch (err) {
+      showMessage(err?.message || 'Erro inesperado ao cadastrar.', 'error');
+      console.error('Erro no cadastro:', err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Cadastrar como Vendedor';
+    }
+  });
+
+  document.getElementById('cep').addEventListener('blur', function (e) {
+    const cep = (e.target.value || '').replace(/\D/g, '');
+    if (cep.length === 8) {
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(r => r.json())
+        .then(data => {
+          if (!data.erro) {
+            document.getElementById('cidade').value = data.localidade || '';
+            document.getElementById('estado').value = data.uf || '';
+            document.getElementById('endereco').value = data.logradouro || '';
+          }
+        });
+    }
+  });
+</script>
+
+</body>
+</html>
