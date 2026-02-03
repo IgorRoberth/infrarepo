@@ -1,0 +1,27 @@
+# === Secrets / env ===
+.env
+**/.env
+
+# === Logs ===
+*.log
+
+# === Java / Maven / Gradle ===
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# === Node / Front ===
+node_modules/
+dist/
+build/
+
+# === IDEs ===
+.idea/
+.vscode/
+*.iml
+
+# === OS ===
+.DS_Store
+Thumbs.db

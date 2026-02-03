@@ -1,0 +1,107 @@
+name: store-ecosystem
+
+networks:
+  store-network:
+    driver: bridge
+
+volumes:
+  pgdata:
+  store_uploads:
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: store-postgres
+    # CORREÇÃO AQUI: Sintaxe da lista de env_file
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - store-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  store-backend:
+    build:
+      context: ./Store
+      dockerfile: Dockerfile.backend
+    image: store-backend:latest
+    container_name: store-backend
+    env_file:
+      - ./.env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SERVER_PORT: "8081"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - store_uploads:/app/uploads
+    networks:
+      - store-network
+    expose:
+      - "8081"
+
+  gateway:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    image: store-gateway:latest
+    container_name: store-gateway
+    env_file:
+      - ./.env
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+    depends_on:
+      - store-backend
+    ports:
+      - "8080:8080"
+    networks:
+      store-network:
+        aliases:
+          - gateway
+
+  store-frontend:
+    build:
+      context: ./Store
+      dockerfile: Dockerfile.frontend
+    image: store-frontend:latest
+    container_name: store-frontend
+    depends_on:
+      - gateway
+    ports:
+      - "8085:80"
+    networks:
+      - store-network
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: store-tunnel
+    # Removido entrypoint fixo para usar o command de forma flexível
+    env_file:
+      - ./.env
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_URL=http://store-frontend:80
+    networks:
+      - store-network
+    entrypoint:
+      - cloudflared
+      - tunnel
+      - --url
+      - http://store-frontend:80
