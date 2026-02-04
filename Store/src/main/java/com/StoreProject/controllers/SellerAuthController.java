@@ -36,7 +36,6 @@ public class SellerAuthController {
         try {
     Seller seller = sellerService.findByEmail(loginRequest.getEmail());
 
-    // Primeiro valida o E-mail
     if (seller == null) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("erro", ErrorCode.LOGIN_ERROR.getMessage())); 
@@ -80,13 +79,11 @@ public class SellerAuthController {
 
     @GetMapping("/validate")
     public ResponseEntity<?> validateToken(Authentication authentication) {
-        // Validação rigorosa: Verifica se existe e se não é um usuário anônimo
         if (authentication == null ||!authentication.isAuthenticated() || 
             authentication instanceof AnonymousAuthenticationToken) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                  .body(Map.of("valid", false, "message", "Sessão inválida ou expirada"));
         }
-        // O Spring Security armazena o que definimos no Filtro no 'Principal'
         Object principal = authentication.getPrincipal();
 
         if (principal instanceof AuthenticatedUser user) {
@@ -97,7 +94,7 @@ public class SellerAuthController {
                 "userId", user.getUserId()
             ));
         }
-        // Fallback genérico caso o Principal venha apenas como nome de usuário
+
         return ResponseEntity.ok(Map.of(
             "valid", true,
             "user", authentication.getName(),

@@ -4,7 +4,7 @@
 # === Spring / runtime ===
 **/logs/
 **/*.log
-
+docker-compose.txt
 # === Test outputs ===
 results/
 **/results/
