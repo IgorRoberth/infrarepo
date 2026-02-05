@@ -7,12 +7,15 @@ networks:
 volumes:
   pgdata:
   store_uploads:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
 
 services:
+  # Base de Dados da Loja
   postgres:
     image: postgres:16-alpine
     container_name: store-postgres
-    # CORREÇÃO AQUI: Sintaxe da lista de env_file
     env_file:
       - ./.env
     environment:
@@ -31,6 +34,22 @@ services:
       timeout: 5s
       retries: 10
 
+  # Qualidade de Código e Segurança Estática (SAST)
+  sonarqube:
+    image: sonarqube:lts-community
+    container_name: store-sonarqube
+    ports:
+      - "9000:9000"
+    networks:
+      - store-network
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+
+  # Backend Java/Spring Boot
   store-backend:
     build:
       context: ./Store
@@ -54,9 +73,8 @@ services:
       - store_uploads:/app/uploads
     networks:
       - store-network
-    expose:
-      - "8081"
 
+  # Gateway de Entrada
   gateway:
     build:
       context: ./gateway-service
@@ -77,6 +95,7 @@ services:
         aliases:
           - gateway
 
+  # Frontend
   store-frontend:
     build:
       context: ./Store
@@ -89,10 +108,11 @@ services:
       - "8085:80"
     networks:
       - store-network
+
+  # Túnel Cloudflare para Acesso Externo
   tunnel:
     image: cloudflare/cloudflared:latest
     container_name: store-tunnel
-    # Removido entrypoint fixo para usar o command de forma flexível
     env_file:
       - ./.env
     command: tunnel --no-autoupdate run

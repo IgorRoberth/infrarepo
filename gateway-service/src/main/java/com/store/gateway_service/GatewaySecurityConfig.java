@@ -9,9 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter;
 import reactor.core.publisher.Mono;
-
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -24,6 +25,15 @@ public class GatewaySecurityConfig {
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
             .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+
+            //Adição de Headers de Segurança no Gateway
+            .headers(headers -> headers
+            .hsts(hsts -> hsts
+            .includeSubdomains(true)
+            .maxAge(Duration.ofDays(365))
+            )
+            .frameOptions(frame -> frame.mode(XFrameOptionsServerHttpHeadersWriter.Mode.SAMEORIGIN))
+        )
 
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint((exchange, e) -> {
@@ -58,7 +68,7 @@ public class GatewaySecurityConfig {
                 .pathMatchers("/api/registerseller", "/api/registerseller/**").permitAll()
                 .pathMatchers("/registerseller", "/registerseller/**").permitAll()
 
-                // Front estático
+                // Front estático e utilitários
                 .pathMatchers(
                     "/", "/home/**", "/login/**", "/cadastros/**", "/produtos/**",
                     "/css/**", "/js/**", "/images/**", "/uploads/**",

@@ -8,10 +8,10 @@ import jakarta.validation.constraints.Size;
 
 public class SellerUpdate {
 
-    @Size(min = 2, max = 100, message = "Nome deve ter entre 2 e 100 caracteres")
+    @Size(min = 2, max = 100, message = "Nome deve conter entre 2 e 100 caracteres")
     private String nome;
 
-    @Email(message = "Email deve ter um formato válido")
+    @Email(message = "E-mail deve conter um formato válido")
     private String email;
 
     @Size(min = 6, max = 100, message = "Senha deve ter entre 6 e 100 caracteres")
@@ -20,7 +20,7 @@ public class SellerUpdate {
     @Pattern(regexp = "^\\(?\\d{2}\\)?[\\s-]?\\d{4,5}[\\s-]?\\d{4}$", message = "Telefone deve ter um formato válido")
     private String telefone;
 
-    @Size(max = 200, message = "Endereço deve ter no máximo 200 caracteres")
+    @Size(max = 200, message = "Endereço deve conter no máximo 200 caracteres")
     private String endereco;
 
     @Pattern(regexp = "^\\d{14}$", message = "CNPJ deve conter exatamente 14 dígitos")

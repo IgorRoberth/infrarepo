@@ -479,8 +479,8 @@ public ResponseEntity<?> createProductWithImage(
         @RequestParam("preco") BigDecimal preco,
         @RequestParam("categoria") String categoria,
         @RequestParam("estoque") Integer estoque,
-        @RequestParam(value = "marca", required = false) String marca, // ADICIONADO
-        @RequestParam(value = "sku", required = false) String sku, // ADICIONADO
+        @RequestParam(value = "marca", required = false) String marca,
+        @RequestParam(value = "sku", required = false) String sku,
         @RequestParam("file") MultipartFile file,
         HttpServletRequest request) {
     try {
