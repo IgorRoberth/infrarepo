@@ -1,5 +1,6 @@
 package com.StoreProject.exceptions;
 
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -12,13 +13,14 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger= org.slf4j.LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<?> handleNoResourceFoundException(NoResourceFoundException e) {
+    public ResponseEntity<Void> handleNoResourceFoundException(NoResourceFoundException e) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
@@ -28,7 +30,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        System.out.println("GlobalExceptionHandler: capturando erro de validação");
+        logger.error("GlobalExceptionHandler: capturando erro de validação");
         
         BindingResult result = ex.getBindingResult();
         
@@ -72,7 +74,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneralException(Exception ex) {
-        System.out.println("GlobalExceptionHandler: erro genérico capturado: " + ex.getMessage());
+        logger.error("GlobalExceptionHandler: erro genérico capturado: ", ex);
         ex.printStackTrace();
         
         Map<String, Object> response = new HashMap<>();

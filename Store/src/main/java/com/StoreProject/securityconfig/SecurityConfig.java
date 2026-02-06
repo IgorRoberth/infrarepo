@@ -37,11 +37,18 @@ public class SecurityConfig {
             .formLogin(AbstractHttpConfigurer::disable)
 
             .headers(headers -> headers
+             // Resolve: HSTS
             .httpStrictTransportSecurity(hsts -> hsts
-                .includeSubDomains(true)
-                .maxAgeInSeconds(31536000)
+            .includeSubDomains(true)
+            .maxAgeInSeconds(31536000)
             )
+             // Resolve: Clickjacking
             .frameOptions(frame -> frame.sameOrigin())
+            // NOVO - Resolve: X-Content-Type-Options
+            .contentTypeOptions(contentType -> {}) 
+            // NOVO - Resolve: CSP
+            .contentSecurityPolicy(csp -> csp
+            .policyDirectives("default-src 'self'; script-src 'self' https://cdn.tailwindcss.com 'unsafe-inline'; style-src 'self' 'unsafe-inline';"))
         )
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint((request, response, authException) -> {

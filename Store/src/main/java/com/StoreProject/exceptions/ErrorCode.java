@@ -24,7 +24,7 @@ public enum ErrorCode {
     AUTHORIZATION_ERROR("E020", "Token de autenticação necessário"),
     PASSWORD_UPDATE_ERROR("E021", "Erro ao atualizar a senha"),
     CNPJ_EXISTENTE("E022", "Já existe um vendedor cadastrado com este CNPJ"),
-    EMAIL_EXISTENTE("E023", "Email existente"),
+    EMAIL_EXISTENTE("E023", "E-mail existente"),
 
     INVALID_TOKEN("E024", "Token inválido ou expirado"),
     EXPIRED_TOKEN("E025", "Token expirado"),
@@ -36,41 +36,26 @@ public enum ErrorCode {
     AUTH_TOKEN_REQUIRED("E031", "Token de autenticação necessário"),
     ACCESS_FORBIDDEN("E032", "Acesso proibido, somente vendedores podem acessar esse recurso"),
     SELLER_STATUS_UPDATE_FAILED("E033", "Falha ao atualizar status do vendedor"),
-    CADASTRO_CONCLUIDO_COM_SUCESSO("E34", "Produto cadastrado com sucesso."),
-    PRODUTO_ATUALIZADO_COM_SUCESSO("E035", "Produto atualizado com sucesso.");
+    CADASTRO_CONCLUIDO_COM_SUCESSO("E034", "Produto cadastrado com sucesso."),
+    PRODUTO_ATUALIZADO_COM_SUCESSO("E035", "Produto atualizado com sucesso."),
+    ERROR_NO_SERVER("E036", "Ocorreu um erro interno no servidor."),
+    NOME_CARACTERES("E037","Nome com formato inválido");
 
     private final String code;
     private final String message;
 
-    // Construtor para inicializar o código e a mensagem do erro
     ErrorCode(String code, String message) {
         this.code = code;
         this.message = message;
     }
 
-    public String getCode() {
-        return code;
-    }
+    public String getCode() { return code; }
+    public String getMessage() { return message; }
 
-    public String getMessage() {
-        return message;
-    }
-
-    // Método para buscar a mensagem do erro por código
     public static String getMessageByCode(String code) {
-        for (ErrorCode errorCode : ErrorCode.values()) {
-            if (errorCode.getCode().equals(code)) {
-                return errorCode.getMessage();
-            }
+        for (ErrorCode ec : values()) {
+            if (ec.code.equals(code)) return ec.message;
         }
         return "Erro desconhecido";
-    }
-
-    public String getTitle() {
-        return getTitle();
-    }
-
-    public String getDescription() {
-        return getDescription();
     }
 }

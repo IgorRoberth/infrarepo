@@ -59,6 +59,7 @@ public class SellerController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
 
     private static final Logger logger = LoggerFactory.getLogger(SellerController.class);
 
@@ -221,9 +222,7 @@ public class SellerController {
     @Transactional
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody SellerUpdate updateDTO) {
         try {
-            // Toda a lógica de verificação de e-mail/cnpj existente deve ser movida para o Service.
             Seller updatedSeller = service.update(id, updateDTO); 
-
             // Retornando ResponseDTO em vez da Entidade pura (Segurança de dados).
             return ResponseEntity.ok(mapper.toResponseDTO(updatedSeller)); 
         } catch (CustomException e) {
@@ -294,7 +293,7 @@ public class SellerController {
             Long sellerId = jwtUtil.getUserIdFromToken(token);
             Seller seller = service.findById(sellerId);
 
-            // CORREÇÃO 7: Adicionado cabeçalho HSTS manualmente na resposta para mitigar o alerta do ZAP.
+            // Adicionado cabeçalho HSTS manualmente na resposta para mitigar o alerta do ZAP.
             return ResponseEntity.ok()
                     .header("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
                     .body(Map.of(

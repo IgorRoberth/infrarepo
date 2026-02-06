@@ -11,8 +11,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "seller")
 @Data
+@Table(
+    name = "seller",
+    uniqueConstraints = {
+        @UniqueConstraint(name = "uk_seller_cnpj", columnNames = "cnpj"),
+        @UniqueConstraint(name = "uk_seller_email", columnNames = "email")
+    }
+)
 public class Seller {
 
     @Id
@@ -21,12 +27,12 @@ public class Seller {
 
     @NotBlank(message = "Nome é obrigatório")
     @Size(min = 2, max = 100)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String nome;
 
     @NotBlank(message = "Email é obrigatório")
     @Email
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 150)
     private String email;
 
     @NotBlank(message = "Senha é obrigatória")
@@ -42,6 +48,7 @@ public class Seller {
     private String telefone;
 
     @Size(max = 200)
+    @Column(length = 200)
     private String endereco;
 
     @NotBlank
@@ -53,7 +60,7 @@ public class Seller {
     @Column(name = "razao_social", length = 150)
     private String razaoSocial;
 
-    @Pattern(regexp = "^\\d{5}-?\\d{3}$", message = "CEP deve ter formato válido")
+    @Pattern(regexp = "^\\d{5}-?\\d{3}$", message = "CEP deve conter formato válido")
     @Column(length = 9)
     private String cep;
 
@@ -62,7 +69,11 @@ public class Seller {
     private String estado;
 
     @Size(max = 100)
+    @Column(length = 100)
     private String cidade;
+
+    @Column(name = "user_type", nullable = false, length = 20)
+    private String userType = "SELLER";
 
     @Column(name = "criado_em", nullable = false, updatable = false)
     private LocalDateTime criadoEm;
@@ -73,11 +84,6 @@ public class Seller {
     @Column(nullable = false)
     private Boolean ativo = true;
 
-    /**
-     * IMPORTANTE:
-     * - NÃO usar cascade ALL em entidades "pai" grandes no Postgres
-     * - Evita problemas de ordem de criação de FK
-     */
     @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
     private List<Product> produtos;
 
@@ -85,6 +91,7 @@ public class Seller {
     public void prePersist() {
         this.criadoEm = LocalDateTime.now();
         this.atualizadoEm = LocalDateTime.now();
+        if (this.userType == null) this.userType = "SELLER";
     }
 
     @PreUpdate

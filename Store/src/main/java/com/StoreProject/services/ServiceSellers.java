@@ -23,6 +23,13 @@ public class ServiceSellers {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    void validarNomeSemUrl(String nome) {
+    if (nome != null && nome.matches(".*\\b(https?://|www\\.|\\w+\\.(com|br|net|org)\\b).*")) {
+        throw new CustomException("Nome não pode conter links/URLs", "NAME_HAS_URL");
+    }
+}
+
+
     public Seller save(Seller seller) {
         return sellersRepository.save(seller);
     }

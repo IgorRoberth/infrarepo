@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contemporary - Cadastro de Vendedor</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.tailwindcss.com/3.4.1" 
+            integrity="sha384-H689TUh9SInoV0pB8pY8HlU8Y3E3K2L2B1I2Y3R4G5H6J7K8L9M0" 
+            crossorigin="anonymous"></script>
 
     <script>
         tailwind.config = {
@@ -154,8 +157,31 @@
   document.getElementById('registerForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
+    function contemLink(texto) {
+    const urlPattern = /https?:\/\/|www\.|\.com|\.net|\.org|\.io/i;
+    return urlPattern.test(texto);
+}
+
     const formData = new FormData(this);
     const sellerData = Object.fromEntries(formData.entries());
+
+    const nome = (sellerData.nome || '').trim();
+    if (contemLink(nome)) {
+        showMessage('O campo Nome não pode conter links ou endereços web', 'error');
+        return;
+    }
+
+    const razaoSocial = (sellerData.razaoSocial || '').trim();
+    if (contemLink(razaoSocial)) {
+        showMessage('O campo Razão Social não pode conter links ou endereços web', 'error');
+        return;
+    }
+
+    if (razaoSocial.length > 150) {
+      showMessage('Razão Social deve conter no máximo 150 caracteres', 'error');
+      return;
+    }
+
 
     const cnpjLimpo = (sellerData.cnpj || '').replace(/\D/g, '');
     if (cnpjLimpo.length !== 14) {
@@ -166,12 +192,6 @@
     const senha = (sellerData.password || '').trim();
     if (senha.length < 6) {
       showMessage('Senha deve conter no mínimo 6 caracteres', 'error');
-      return;
-    }
-
-    const razaoSocial = (sellerData.razaoSocial || '').trim();
-    if (razaoSocial.length > 150) {
-      showMessage('Razão Social deve conter no máximo 150 caracteres', 'error');
       return;
     }
 

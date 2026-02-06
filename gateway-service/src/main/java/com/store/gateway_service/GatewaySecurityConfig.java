@@ -33,8 +33,14 @@ public class GatewaySecurityConfig {
             .maxAge(Duration.ofDays(365))
             )
             .frameOptions(frame -> frame.mode(XFrameOptionsServerHttpHeadersWriter.Mode.SAMEORIGIN))
-        )
-
+            .contentTypeOptions(ServerHttpSecurity.HeaderSpec.ContentTypeOptionsSpec::getClass)
+            .contentSecurityPolicy(csp -> csp
+                    .policyDirectives("default-src 'self'; " +
+                        "script-src 'self' https://cdn.tailwindcss.com 'unsafe-inline'; " +
+                        "style-src 'self' 'unsafe-inline'; " +
+                        "img-src 'self' data: https:; " +
+                        "connect-src 'self' https://*.trycloudflare.com;"))
+            )
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint((exchange, e) -> {
                     var response = exchange.getResponse();
