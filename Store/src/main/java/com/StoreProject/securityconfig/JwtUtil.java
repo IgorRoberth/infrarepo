@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 import javax.crypto.SecretKey;
 
@@ -17,6 +18,8 @@ public class JwtUtil {
 
     @Value("${jwt.expiration}")
     private long EXPIRATION_TIME;
+
+    Logger logger = Logger.getLogger(getClass().getName());
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = SECRET_KEY.getBytes();
@@ -76,18 +79,19 @@ public class JwtUtil {
                     .build()
                     .parseClaimsJws(token);
             return true;
+        
         } catch (ExpiredJwtException e) {
-            System.out.println("Token expirado: " + e.getMessage());
+            logger.warning("Token expirado: " + e.getMessage());
         } catch (UnsupportedJwtException e) {
-            System.out.println("Token não suportado: " + e.getMessage());
+            logger.severe("Token não suportado: " + e.getMessage());
         } catch (MalformedJwtException e) {
-            System.out.println("Token malformado: " + e.getMessage());
+            logger.warning("Token malformado: " + e.getMessage());
         } catch (io.jsonwebtoken.security.SignatureException e) {
-            System.out.println("Assinatura inválida: " + e.getMessage());
+            logger.severe("Assinatura inválida: " + e.getMessage());
         } catch (IllegalArgumentException e) {
-            System.out.println("Token vazio ou nulo: " + e.getMessage());
+            logger.warning("Token vazio ou nulo: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Erro na validação do token: " + e.getMessage());
+            logger.severe("Erro na validação do token: " + e.getMessage());
         }
         return false;
     }

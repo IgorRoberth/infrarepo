@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,27 +31,31 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(AbstractHttpConfigurer::disable)
-            .httpBasic(AbstractHttpConfigurer::disable)
-            .formLogin(AbstractHttpConfigurer::disable)
 
-            .headers(headers -> headers
-             // Resolve: HSTS
-            .httpStrictTransportSecurity(hsts -> hsts
-            .includeSubDomains(true)
-            .maxAgeInSeconds(31536000)
-            )
-             // Resolve: Clickjacking
+        http
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(AbstractHttpConfigurer::disable)
+        .httpBasic(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
+
+        .headers(headers -> headers
+            .defaultsDisabled() // Importante: limpa as regras padrão para aplicar as minhas com rigor
             .frameOptions(frame -> frame.sameOrigin())
-            // NOVO - Resolve: X-Content-Type-Options
-            .contentTypeOptions(contentType -> {}) 
-            // NOVO - Resolve: CSP
+            .contentTypeOptions(type -> {})
+            .cacheControl(cache -> cache.disable()) // Resolve o alerta de Cache-control
+            .httpStrictTransportSecurity(hsts -> hsts
+                .includeSubDomains(true)
+                .maxAgeInSeconds(31536000)
+                .requestMatcher(org.springframework.security.web.util.matcher.AnyRequestMatcher.INSTANCE)
+            )
             .contentSecurityPolicy(csp -> csp
-            .policyDirectives("default-src 'self'; script-src 'self' https://cdn.tailwindcss.com 'unsafe-inline'; style-src 'self' 'unsafe-inline';"))
-        )
-            .exceptionHandling(ex -> ex
+                .policyDirectives("default-src 'self'; " +
+                                 "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+                                 "style-src 'self' 'unsafe-inline'; " +
+                                 "img-src 'self' data: https:; " + 
+                                 "connect-src 'self' http://localhost:8085 http://127.0.0.1:8085 https://*.trycloudflare.com https://viacep.com.br;"))
+                 )
+                .exceptionHandling(ex -> ex
                 .authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.setContentType("application/json");
@@ -92,7 +97,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(Arrays.asList(
-        "http://localhost:3000",                   
+        "http://localhost:8085",
+        "http://127.0.0.1:8085",                   
         "https://*.trycloudflare.com"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
